@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Reality is also pizza</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    #typing-text {
+  font-size: 22px;
+  text-align: center;
+  margin: 40px auto 20px auto;
+  color: #000;
+  font-family: 'Pretendard', sans-serif;
+  min-height: 28px;
+  font-weight: 700;
+}
+    #typing-text::after {
+      content: '|';
+      animation: blink 0.8s infinite;
+      margin-left: 4px;
+      color: #000;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+
+    @keyframes dropIn {
+    0% {
+      transform: translateY(-800px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+  .side-circle,
+  .side-rect {
+    animation: dropIn 3s ease-out forwards;
+  }
+
+  .right-rect {
+    animation-delay: 0.1s;
+  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 500vh; 
+      background-color: #fff;
+      font-family: 'Pretendard', sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 4em;
+      margin-top: 60px;
+      margin-bottom: 20px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    textarea {
+      background-color: transparent;     
+  border: none;                      
+  border-bottom: 20px solid #000;   
+  color: #000;                      
+  width: 450px;
+  padding: 0px 0;                 
+  font-size: 22px;
+  font-family: 'Pretendard', sans-serif;
+  resize: none;
+  overflow: hidden;
+  min-height: auto;
+  line-height: 1.0;
+  text-align: left;
+  display: block;
+  margin: 160px auto;
+  animation: slideInFromLeft 2s ease-out forwards;
+    }
+    textarea:focus {
+  outline: none;
+}
+    #morseDisplay {
+      margin-top: 50px;
+      min-height: 100px;
+      font-size: 60px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 2;
+      position: relative;
+    }
+
+    .dot, .dash, .space {
+      opacity: 0;
+      animation: fade 0.4s ease-out forwards;
+      color: black;
+    }
+
+    .space {
+      width: 40px;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+      
+    .pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .pattern-shape {
+      position: absolute;
+      display: block;
+      background-color: black;
+    }
+
+    .morse-dot {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+
+    .morse-dash {
+      width: 80px;
+      height: 6px;
+      border-radius: 0px;
+    }
+    .side-circle {
+  width: 350px;
+  height: 350px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+}
+
+.left-circle {
+  left: 100px;
+}
+.second-left-circle {
+  top: 450px;  
+}
+.right-circle {
+  right: 100px;
+}
+.side-rect {
+  width: 40px;            
+  height: 330px;          
+  background-color: black;
+  position: absolute;
+  z-index: 1;
+}
+.right-rect {
+  right: 250px;            
+  top: 450px;          
+}
+  </style>
+</head>
+<body>
+  <div class="side-circle left-circle"></div>
+  <div class="side-circle left-circle second-left-circle"></div>
+  <div class="side-circle right-circle"></div>
+  <div class="side-rect right-rect"></div>
+  <div class="pattern" id="pattern"></div>
+
+  <h1>MORSE.</h1>
+  <div id="typing-text"></div>
+  <textarea id="textInput" placeholder="Type something..."></textarea>
+  <div id="morseDisplay"></div>
+  
+
+  <script>
+    const message = "Reality is also pizza";
+    const target = document.getElementById("typing-text");
+
+    let index = 0;
+
+    function typeNextChar() {
+      if (index < message.length) {
+        target.textContent += message.charAt(index);
+        index++;
+        setTimeout(typeNextChar, 100);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(typeNextChar, 500);
+    });
+    const koreanMorseMap = {
+      'ㄱ': '.-', 'ㄴ': '-...', 'ㄷ': '-..',
+      'ㄹ': '.-..', 'ㅁ': '--', 'ㅂ': '-...',
+      'ㅅ': '...', 'ㅇ': '.', 'ㅈ': '.---',
+      'ㅊ': '---.', 'ㅋ': '-.-', 'ㅌ': '-..-',
+      'ㅍ': '.--.', 'ㅎ': '....',
+      'ㅏ': '.-', 'ㅑ': '.--', 'ㅓ': '..-.',
+      'ㅕ': '..--', 'ㅗ': '--.', 'ㅛ': '--..',
+      'ㅜ': '..--', 'ㅠ': '---.', 'ㅡ': '..--..',
+      'ㅣ': '..'
+    };
+
+    const engMorseMap = {
+      'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..',
+      'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+      'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+      'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+      'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+      'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+      'Y': '-.--', 'Z': '--..'
+    };
+
+    function disassembleHangul(text) {
+      const chosung = [ "ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ" ];
+      const jungsung = [ "ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ" ];
+      const jongsung = [ "", "ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ" ];
+      let result = '';
+      for (const char of text) {
+        const code = char.charCodeAt(0);
+        if (code >= 44032 && code <= 55203) {
+          const uni = code - 44032;
+          const ch = Math.floor(uni / 588);
+          const ju = Math.floor((uni - (ch * 588)) / 28);
+          const jo = uni % 28;
+          result += chosung[ch] + jungsung[ju];
+          if (jongsung[jo]) result += jongsung[jo];
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    }
+
+    function toMorse(text) {
+      const decomposed = disassembleHangul(text);
+      return decomposed.toUpperCase().split('').map(ch => {
+        if (koreanMorseMap[ch]) return koreanMorseMap[ch];
+        if (engMorseMap[ch]) return engMorseMap[ch];
+        if (ch === ' ') return '/';
+        return '';
+      }).join(' ');
+    }
+
+    function playBeep(duration) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 750;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration / 1000);
+      osc.stop(ctx.currentTime + duration / 1000);
+    }
+
+    async function playMorse() {
+      const input = document.getElementById("textInput").value;
+      const morse = toMorse(input);
+      const display = document.getElementById("morseDisplay");
+      display.innerHTML = '';
+
+      for (const char of morse) {
+        if (char === '.') {
+          const span = document.createElement('span');
+          span.className = 'dot';
+          span.textContent = '●';
+          display.appendChild(span);
+          playBeep(200);
+          await new Promise(r => setTimeout(r, 400));
+        } else if (char === '-') {
+          const span = document.createElement('span');
+          span.className = 'dash';
+          span.textContent = '―';
+          display.appendChild(span);
+          playBeep(600);
+          await new Promise(r => setTimeout(r, 800));
+        } else if (char === '/') {
+          const space = document.createElement('div');
+          space.className = 'space';
+          display.appendChild(space);
+          await new Promise(r => setTimeout(r, 1000));
+        } else if (char === ' ') {
+          await new Promise(r => setTimeout(r, 400));
+        }
+      }
+    }
+
+    document.getElementById("textInput").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        playMorse();
+      }
+    });
+
+    // 입력 줄 수에 따라 높이 자동 조절
+    const textarea = document.getElementById("textInput");
+    textarea.addEventListener("input", () => {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    });
+  </script>
+</body>
+</html>
